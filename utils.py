@@ -5,7 +5,7 @@ import yaml
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain.chains import create_retrieval_chain
+from langchain.chains import create_retrieval_chain, RetrievalQA
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.llms import Ollama
@@ -22,8 +22,6 @@ load_dotenv()
 with open("config/config.yml", 'r', encoding='utf-8') as yamlfile:
     cfg = Box(yaml.safe_load(yamlfile))
 
-def build_llm():
-    llm = Ollama(model = 'gemma2:2b')
 
 def create_vectordb():
     loader = DirectoryLoader(cfg.DATA_PATH,
@@ -55,10 +53,16 @@ def setup_rag_chain():
             ("human", "{input}"),
         ]
     )
-    llm = build_llm()
-    retriever = Chroma.load(cfg.DB_CHROMA_PATH)
+
+    llm = Ollama(model = 'gemma2:2b')
+    retriever = Chroma(persist_directory=cfg.DB_CHROMA_PATH).as_retriever(search_kwargs={'k': cfg.VECTOR_COUNT})
     question_answer_chain = create_stuff_documents_chain(llm, prompt)
-    rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+    rag_chain = RetrievalQA.from_chain_type(llm=llm,
+                                    chain_type='stuff',
+                                    retriever=retriever,
+                                    return_source_documents=cfg.RETURN_SOURCE_DOCUMENTS,
+                                    chain_type_kwargs={'prompt': prompt}
+                                    )
     print("RAG Chain created succesfully!")
     return rag_chain
 
