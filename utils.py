@@ -33,7 +33,6 @@ def create_vectordb():
                                                     chunk_overlap=cfg.CHUNK_OVERLAP)
     texts = text_splitter.split_documents(docs)
     vectorstore = Chroma.from_documents(texts, embeddings, persist_directory=cfg.DB_CHROMA_PATH)
-    # vectorstore.save_local(cfg.DB_CHROMA_PATH)
     print("Vector DB setup successfully!")
 
 def setup_rag_chain():
@@ -55,17 +54,9 @@ def setup_rag_chain():
     )
 
     llm = Ollama(model = 'gemma2:2b')
-    retriever = Chroma(persist_directory=cfg.DB_CHROMA_PATH).as_retriever(search_kwargs={'k': cfg.VECTOR_COUNT})
+    embeddings = HuggingFaceEmbeddings(model_name = "sentence-transformers/all-MiniLM-L6-v2", model_kwargs = {"device" : "cpu"}) 
+    retriever = Chroma(persist_directory=cfg.DB_CHROMA_PATH, embedding_function=embeddings).as_retriever(search_kwargs={'k': cfg.VECTOR_COUNT})
     question_answer_chain = create_stuff_documents_chain(llm, prompt)
-    rag_chain = RetrievalQA.from_chain_type(llm=llm,
-                                    chain_type='stuff',
-                                    retriever=retriever,
-                                    return_source_documents=cfg.RETURN_SOURCE_DOCUMENTS,
-                                    chain_type_kwargs={'prompt': prompt}
-                                    )
+    rag_chain = create_retrieval_chain(retriever, question_answer_chain)
     print("RAG Chain created succesfully!")
     return rag_chain
-
-if __name__ == "__main__":
-    create_vectordb()
-    setup_rag_chain()
