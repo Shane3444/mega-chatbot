@@ -1,4 +1,6 @@
 streamlit
+streamlit-pills
+streamlit-extras
 langchain
 python-dotenv
 python-box
