@@ -9,3 +9,4 @@ pypdf
 sentence-transformers
 chromadb
 ollama
+protobuf~=3.19.0
