@@ -33,16 +33,3 @@ user_pref = {
 }
 st.session_state["preferences"] = user_pref
 submit()
-
-# with st.chat_message("assistant"):
-#         st.markdown(f"{duration_option}, {month_option}, {ig_option}, {group_option}")
-
-# if prompt := st.chat_input("What's up?"):
-#     st.chat_message("user").markdown(prompt)
-#     st.session_state.messages.append({"role" : "user", "content" : prompt})
-#     response = prompt
-
-#     with st.chat_message("assistant"):
-#         st.markdown(response)
-
-#     st.session_state.messages.append({"role" : "assistant", "content" : response})

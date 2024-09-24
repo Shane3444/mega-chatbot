@@ -1,10 +1,8 @@
 RETURN_SOURCE_DOCUMENTS: True
-VECTOR_COUNT: 3
-CHUNK_SIZE: 1000
-CHUNK_OVERLAP: 250
-DATA_PATH: 'chatbot/docs/'
-DB_CHROMA_PATH: 'chatbot/vectorstore/chromadb'
-# MODEL_TYPE: 'llama'
-# MODEL_BIN_PATH: 'models/llama-2-7b-chat.ggmlv3.q8_0.bin'
+VECTOR_COUNT: 9
+CHUNK_SIZE: 256
+CHUNK_OVERLAP: 32
+DATA_PATH: 'docs/'
+DB_CHROMA_PATH: 'vectorstore/chromadb'
 MAX_NEW_TOKENS: 256
-TEMPERATURE: 0.01
+TEMPERATURE: 0.04
