@@ -15,7 +15,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 load_dotenv()
 
 #Getting paths from yamlfile
-with open("config/config.yml", 'r', encoding='utf-8') as yamlfile:
+with open("./config/config.yml", 'r', encoding='utf-8') as yamlfile:
     cfg = Box(yaml.safe_load(yamlfile))   
 
 
